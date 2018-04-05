@@ -1,7 +1,7 @@
 # Iridescent
 
 A simple, proof of concept, cross platform, 2D isometric game engine written in
-C++, using OpenGL (through SFML).
+C++, using OpenGL.
 
 **P.S.** This is a WIP and in a very rudimentary stage right now. Most of what
 I've written below exists only as a blob in my head.
@@ -24,7 +24,7 @@ C, C++ and STL along with my knowledge on data structures and algorithms.
 # How?
 
 I'm using C++ for the core engine, along with Lua for realizing the runtime
-stuff like the ECS system and scritps. SFML is used for system specific stuff.
+stuff like the ECS system and scritps.
 
 # Engine Design & Architecture
 
