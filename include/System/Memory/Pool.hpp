@@ -165,7 +165,7 @@ public:
         if ( address != nullptr )
         {
             // Map the chunk under use to it's correct block
-            m_activeChunkMap[address] = block;
+            m_activeChunkMap.insert( { address, block } );
             LOG(Log::Level::Debug) << "New chunk assigned by pool: " << address << ", Block: " << block << std::endl;
             //std::cout << "New chunk assigned by pool: " << address << ", Block: " << block << std::endl;
         }
@@ -217,7 +217,18 @@ private:
     Block1024B m_block1024B;
     
     // The default no. of chunks per block
-    std::map<Types::Int16, Types::Int64> m_chunksPerBlock;
+    const std::map<Types::Int16, Types::Int64> m_chunksPerBlock = 
+    {
+        { 4, 100000 },
+        { 8, 100000 },
+        { 16, 100000 },
+        { 32, 100000 },
+        { 64, 100000 },
+        { 128, 10000 },
+        { 256, 10000 },
+        { 512, 1000 },
+        { 1024, 100 }
+    };
     //Types::Map<Types::Int16, Types::Int64> m_chunksPerBlock;
     
     // Currently assigned chunks (used for returning a deallocated chunk to it's currect block)

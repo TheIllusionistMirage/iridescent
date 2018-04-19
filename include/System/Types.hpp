@@ -29,6 +29,10 @@ using Int16  = std::int16_t;
 using Int32  = std::int32_t;
 using Int64  = std::int64_t;
 
+// Graphics related types
+template <class T>
+using Vector2 = struct Vector<T>{ T x, y; };
+
 } // End of namespace Types
 
 } // End of namespace System

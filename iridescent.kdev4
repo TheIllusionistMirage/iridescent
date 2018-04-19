@@ -1,3 +1,4 @@
 [Project]
-Name=iridescent
+CreatedFrom=CMakeLists.txt
 Manager=KDevCMakeManager
+Name=iridescent

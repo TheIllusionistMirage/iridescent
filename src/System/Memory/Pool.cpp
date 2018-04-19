@@ -37,46 +37,46 @@ bool Pool::create()
 {
     bool status = true;
     
-    // Initialize the default chunks per block info
-    // TODO: Read this value from the config file
-    m_chunksPerBlock[4] = 100000;
-    m_chunksPerBlock[8] = 100000;
-    m_chunksPerBlock[16] = 100000;
-    m_chunksPerBlock[32] = 100000;
-    m_chunksPerBlock[64] = 100000;
-    m_chunksPerBlock[128] = 10000;
-    m_chunksPerBlock[256] = 10000;
-    m_chunksPerBlock[512] = 1000;
-    m_chunksPerBlock[1024] = 100;
+//     // Initialize the default chunks per block info
+//     // TODO: Read this value from the config file
+//     m_chunksPerBlock[4] = 100000;
+//     m_chunksPerBlock[8] = 100000;
+//     m_chunksPerBlock[16] = 100000;
+//     m_chunksPerBlock[32] = 100000;
+//     m_chunksPerBlock[64] = 100000;
+//     m_chunksPerBlock[128] = 10000;
+//     m_chunksPerBlock[256] = 10000;
+//     m_chunksPerBlock[512] = 1000;
+//     m_chunksPerBlock[1024] = 100;
     
     // Initialize the blocks one by one
     
     // Create the 4B chunk block
-    bool b4 = m_block4B.create( m_chunksPerBlock[4] );
+    bool b4 = m_block4B.create( m_chunksPerBlock.at(4));
     
     // Create the 8B chunk block
-    bool b8 = m_block8B.create( m_chunksPerBlock[8] );
+    bool b8 = m_block8B.create( m_chunksPerBlock.at(8) );
     
     // Create the 16B chunk block
-    bool b16 = m_block16B.create( m_chunksPerBlock[16] );
+    bool b16 = m_block16B.create( m_chunksPerBlock.at(16) );
     
     // Create the 32B chunk block
-    bool b32 = m_block32B.create( m_chunksPerBlock[32] );
+    bool b32 = m_block32B.create( m_chunksPerBlock.at(32) );
     
     // Create the 64B chunk block
-    bool b64 = m_block64B.create( m_chunksPerBlock[64] );
+    bool b64 = m_block64B.create( m_chunksPerBlock.at(64) );
     
     // Create the 128B chunk block
-    bool b128 = m_block128B.create( m_chunksPerBlock[128] );
+    bool b128 = m_block128B.create( m_chunksPerBlock.at(128) );
     
     // Create the 256B chunk block
-    bool b256 = m_block256B.create( m_chunksPerBlock[256] );
+    bool b256 = m_block256B.create( m_chunksPerBlock.at(256) );
     
     // Create the 512B chunk block
-    bool b512 = m_block512B.create( m_chunksPerBlock[512] );
+    bool b512 = m_block512B.create( m_chunksPerBlock.at(512) );
     
     // Create the 1024B chunk block
-    bool b1024 = m_block1024B.create( m_chunksPerBlock[1024] );
+    bool b1024 = m_block1024B.create( m_chunksPerBlock.at(1024) );
     
     status = b4 && b8 && b16 && b32 && b64 && b128 && b256 && b512 && b1024;
     

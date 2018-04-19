@@ -1,6 +1,7 @@
 #ifndef SYSTEM_HPP
 #define SYSTEM_HPP
 
+#include "Memory/Pool.hpp"
 #include "Memory/Allocator.hpp"
 
 // Start of Irideiscent's namespace
@@ -29,7 +30,7 @@ static Info SystemInfo;
 // class Message;
 // class MessageBus;
 // 
-// class MemoryPool;
+//class MemoryPool;
 // 
 // class Window;
 // class WindowImp;

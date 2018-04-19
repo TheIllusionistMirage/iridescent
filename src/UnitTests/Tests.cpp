@@ -55,16 +55,20 @@ bool testMemoryPool()
 {
     std::cout << "* Analyzing performance of the memory pool..." << std::endl;
     
-    Iridescent::System::Memory::Pool::get().create();
-    
-    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
-    
     struct MyStruct
     {
         int i;
         float f;
     };
     
+    std::chrono::system_clock::time_point endTime;
+    std::chrono::milliseconds dt;
+    std::chrono::system_clock::time_point startTime;
+
+ 
+    Iridescent::System::Memory::Pool::get().create();
+    
+    startTime = std::chrono::system_clock::now();
     for ( long long i = 0; i < 10000; ++i )
     {
         MyStruct* arr = (MyStruct* )Iridescent::System::Memory::Pool::get().allocate( sizeof(MyStruct) * 100 );
@@ -79,10 +83,14 @@ bool testMemoryPool()
         Iridescent::System::Memory::Pool::get().deallocate( arr );
     }
     
-    std::chrono::system_clock::time_point endTime = std::chrono::system_clock::now();
+    endTime = std::chrono::system_clock::now();
     
-    std::chrono::milliseconds dt = std::chrono::duration_cast<std::chrono::milliseconds>( endTime - startTime );
+    dt = std::chrono::duration_cast<std::chrono::milliseconds>( endTime - startTime );
     std::cout << "Total Time (memory pool): " << dt.count() << " ms" << std::endl;
+    
+    Iridescent::System::Memory::Pool::get().destroy();
+    
+    
     
     // C++ default memory manager (new/delete)
     
@@ -106,29 +114,27 @@ bool testMemoryPool()
     dt = std::chrono::duration_cast<std::chrono::milliseconds>( endTime - startTime );
     std::cout << "Total Time (new/delete): " << dt.count() << " ms" << std::endl;
     
-    // C memory manager (malloc/free)
-    
-    startTime = std::chrono::system_clock::now();
-    
-    for ( long long i = 0; i < 10000; ++i )
-    {
-        MyStruct* arr = (MyStruct* ) malloc( sizeof( MyStruct ) * 100 );
-        
-        for ( long long j = 0; j < 1000; ++j )
-        {
-            MyStruct* arr2 = (MyStruct* ) malloc( sizeof( MyStruct ) * 100 );
-            free(arr2);
-        }
-        
-        free(arr);
-    }
-    
-    endTime = std::chrono::system_clock::now();
-    
-    dt = std::chrono::duration_cast<std::chrono::milliseconds>( endTime - startTime );
-    std::cout << "Total Time (malloc/free): " << dt.count() << " ms" << std::endl;
-    
-    Iridescent::System::Memory::Pool::get().destroy();
+//     // C memory manager (malloc/free)
+//     
+//     startTime = std::chrono::system_clock::now();
+//     
+//     for ( long long i = 0; i < 10000; ++i )
+//     {
+//         MyStruct* arr = (MyStruct* ) malloc( sizeof( MyStruct ) * 100 );
+//         
+//         for ( long long j = 0; j < 1000; ++j )
+//         {
+//             MyStruct* arr2 = (MyStruct* ) malloc( sizeof( MyStruct ) * 100 );
+//             free(arr2);
+//         }
+//         
+//         free(arr);
+//     }
+//     
+//     endTime = std::chrono::system_clock::now();
+//     
+//     dt = std::chrono::duration_cast<std::chrono::milliseconds>( endTime - startTime );
+//     std::cout << "Total Time (malloc/free): " << dt.count() << " ms" << std::endl;
     
     return true;
 }
