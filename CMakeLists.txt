@@ -23,6 +23,8 @@ include_directories("${PROJECT_SOURCE_DIR}/include/")
 # Specify the source directories
 file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/src/System/*.cpp"
                   "${PROJECT_SOURCE_DIR}/src/System/Memory/*.cpp"
+                  "${PROJECT_SOURCE_DIR}/src/System/Event/*.cpp"
+                  "${PROJECT_SOURCE_DIR}/src/System/Graphics/*.cpp"
                   "${PROJECT_SOURCE_DIR}/src/Core/*.cpp"
                   "${PROJECT_SOURCE_DIR}/src/UnitTests/*.cpp"
                   "${PROJECT_SOURCE_DIR}/src/*.cpp")

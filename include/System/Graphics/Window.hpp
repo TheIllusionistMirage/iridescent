@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "../Types.hpp"
+#include "System/Types.hpp"
 #include "Imp/WindowImp.hpp"
 
 namespace Iridescent

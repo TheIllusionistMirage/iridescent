@@ -9,7 +9,7 @@ namespace Iridescent
 namespace System
 {
 
-template<typename ... Args>
+template< typename... Args>
 class Message
 {
     
@@ -23,7 +23,7 @@ public:
     
     // Message Interface API
     
-    void create( Args params );
+    void create( Args... params );
     
     void destroy();
     

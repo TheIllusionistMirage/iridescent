@@ -30,8 +30,26 @@ using Int32  = std::int32_t;
 using Int64  = std::int64_t;
 
 // Graphics related types
+
 template <class T>
-using Vector2 = struct Vector<T>{ T x, y; };
+struct Vector2
+{
+    T x, y;
+};
+
+using Vector2i = Vector2<Int16>;
+using Vector2u = Vector2<UInt16>;
+using Vector2f = Vector2<float>;
+
+template <class T>
+struct Vector3
+{
+    T x, y, z;
+};
+
+using Vector3i = Vector3<Int16>;
+using Vector3u = Vector3<UInt16>;
+using Vector3f = Vector3<float>;
 
 } // End of namespace Types
 
