@@ -8,6 +8,11 @@
 
 #include "UnitTests/Tests.hpp"
 
+int foo(int x)
+{
+    std::cout << "Plus 20: " << x + 20 << std::endl;
+}
+
 int main(int argc, char **argv)
 {
     //runAllTests();
@@ -43,10 +48,10 @@ int main(int argc, char **argv)
          i(0), f(0.f)
         {}
         
-        float add( int a, float b )
+        float add( int a, float* b )
         {
-            std::cout << "This is your conscience: " << ( i + a ) + ( f + b ) << std::endl;
-            return ( i + a ) + ( f + b );
+            std::cout << "This is your conscience: " << ( i + a ) + ( f + *b ) << std::endl;
+            return ( i + a ) + ( f + *b );
         }
     };
     
@@ -54,24 +59,34 @@ int main(int argc, char **argv)
     float b = 3.14;
     MyStruct ms;
     
-    Iridescent::System::Event::Callback<MyStruct, float, int, float> cb( &ms, &MyStruct::add, a, b );
-    //cb(1, 3.14);
-    //cb.execute(1, 3.14);
-    //cb();
-    cb.run();
-    
-    //Iridescent::System::Event::Callback cb2( MyStruct, (&MyStruct::add)(int, float), 12, 32.4f );
-    //Iridescent::System::Event::Callback cb2;
-    //cb2.set<MyStruct, float, int, double>( &ms, &MyStruct::add, 1, 3.14 );
-    //cb2();
-    
-    a = 1;
-    b = 4.13;
-    
+//     
+//     //Iridescent::System::Event::Callback cb2( MyStruct, (&MyStruct::add)(int, float), 12, 32.4f );
+//     //Iridescent::System::Event::Callback cb2;
+//     //cb2.set<MyStruct, float, int, double>( &ms, &MyStruct::add, 1, 3.14 );
+//     //cb2();
+//     
+//     a = 21;
+//     b = 4.13;
+//     
     Iridescent::System::Event::Handler handler;
-    handler.bindCallback<MyStruct, float, int, float>( Iridescent::System::Event::Event::EventType::Closed, Iridescent::System::Event::Callback<MyStruct, float, int, float>( &ms, &MyStruct::add, a, b ) );
+    
+    //handler.bindCallback<MyStruct, float, int, float*>( Iridescent::System::Event::Event::EventType::Closed, Iridescent::System::Event::CallbackClassMethod<MyStruct, float, int, float*>( &ms, &MyStruct::add, a, &b ) );
+    handler.bindCallback<MyStruct, float, int, float*>( Iridescent::System::Event::Event::EventType::Closed, &ms, &MyStruct::add, a, &b );
+    handler.bindCallback<int, int>( Iridescent::System::Event::Event::EventType::Closed, &foo, 10 );
     
     handler.handle();
+    
+//     Iridescent::System::Event::Callback<MyStruct, float, int, float*> cb( &ms, &MyStruct::add, a, &b );
+//     //cb(1, 3.14);
+//     //cb.execute(1, 3.14);
+//     //cb();
+//     cb.run();
+//     
+//     Iridescent::System::Event::Callback<int, int> cb2( &foo, 10 );
+//     cb2.run();
+    
+//     Iridescent::System::Event::Handler handler;
+//     handler.bindCallback<int, int>( Iridescent::System::Event::Event::EventType::Closed, &foo, 10 );
     
     return 0;
 }

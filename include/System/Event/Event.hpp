@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <tuple>
+#include <utility>
+#include <functional>
+#include <typeinfo>
 
 #include "System/Types.hpp"
 #include "System/Event/Keyboard.hpp"
@@ -88,62 +91,6 @@ struct Event
 // Callback
 ///////////////////////////////////////////////////////////////////////////////
 
-// // Courtesy: http://www.partow.net/programming/templatecallback/index.html
-// class Callback
-// {
-// 
-// public:
-//     //using Method = ReturnType (Type::*)( Args ... );
-//     
-//     // TODO: Error checking
-//     
-//     Callback()
-//     {}
-//     
-//     int (*v)(char);
-//     
-//     template <class Type, class ReturnType, class... Args>
-//     void set( Type* obj, ReturnType(Type::*method)(Args...), Args... args )
-//     {
-//         static Type* m_object = obj;
-//         static ReturnType(Type::*m_method)(Args...) = method;
-//         
-//         //(obj->*method)( args ... );
-//         (m_object->*m_method)( args ... );
-//     }
-//     
-//     void operator () ()
-//     {
-//     }
-//     
-//     
-//     
-// //     template <class Type, class ReturnType, class... Args>
-// //     //Callback( Type* object, ReturnType(Type::*method)(Args...), Args... args ) //:
-// //     //Callback( Type* object, ReturnType(Type::*), ReturnType returnType, Args... args )
-// //     Callback( Type* object )
-// // //      m_object( object ),
-// // //      m_method( method )
-// //     {
-// //         //auto m = method;
-// //     }
-//     
-// //     ReturnType operator () ( Args... args )
-// //     {
-// //         return (m_object->*m_method)( args... );
-// //     }
-// //     
-// //     ReturnType execute( Args... args )
-// //     {
-// //         return operator()( args... );
-// //     }
-//     
-// private:
-//     
-//     //Type* m_object;
-//     //Method m_method;
-// };
-
 class CallbackBase
 {
 public:
@@ -154,14 +101,12 @@ public:
     {}
     
     virtual void run() = 0;
-//     {
-//         std::cout << "asdasdasd" << std::endl;
-//     }
 };
 
 // Courtesy: http://www.partow.net/programming/templatecallback/index.html
-template <class Type, class ReturnType, class... Args>
-class Callback : public CallbackBase
+
+template <class Type, class ReturnType = void, class... Args>
+class CallbackClassMethod : public CallbackBase
 {
 
 public:
@@ -171,21 +116,12 @@ public:
     
     // TODO: Error checking
     
-    Callback( Type* object, Method method, Args... args ) :
+    CallbackClassMethod( Type* object, Method method, Args... args ) :
      m_object( object ),
      m_method( method ),
      m_params( args... )
-    {}
-    
-//     ReturnType operator () ( Args... args )
-//     {
-//         return (m_object->*m_method)( args... );
-//     }
-//     
-//     ReturnType execute( Args... args )
-//     {
-//         return operator()( args... );
-//     }
+    {
+    }
 
     void run() override
     {
@@ -212,8 +148,170 @@ private:
     Params m_params;
 };
 
-//template <typename Func, typename... BoundArgs>
-//void connect(Func&& handler, const BoundArgs&&... args);
+///////////////////////////////////////////////////////////////////////////////
+template <class ReturnType = void, class... Args>
+class CallbackFunction : public CallbackBase
+{
+
+public:
+    
+    using Function = ReturnType (*)( Args ... );
+    using Params = std::tuple<Args...>;
+    
+    // TODO: Error checking
+    
+    CallbackFunction( Function function, Args... args ) :
+     m_function( function ),
+     m_params( args... )
+    {
+    }
+
+    void run() override
+    {
+        executeHelper( m_params, std::index_sequence_for<Args...>() );
+    }
+
+    ReturnType execute( Args... args )
+    {
+        return m_function( args... );
+    }
+    
+private:
+    
+    template <std::size_t... Is>
+    ReturnType executeHelper( Params& params, std::index_sequence<Is...> )
+    {
+        return execute( std::get<Is>( params )... );
+    }
+    
+private:
+    
+    Function m_function;
+    Params m_params;
+};
+
+// Courtesy: http://www.partow.net/programming/templatecallback/index.html
+// template <class Type = void, class ReturnType = void, class... Args>
+// class Callback : public CallbackBase
+// {
+// 
+// public:
+//     
+//     using Method = ReturnType (Type::*)( Args ... );
+//     using Function = ReturnType(*)(Args...);
+//     using Params = std::tuple<Args...>;
+//     
+//     // TODO: Error checking
+//     
+//     Callback( Type* object, Method method, Args... args ) :
+//      m_object( object ),
+//      m_method( method ),
+//      m_params( args... )
+//     {
+// //         if ( typeid(m_object) != typeid( void ) )
+// //             m_method._method = method;
+// //         else
+// //             m_method._function = method;
+//         //std::cout << "CLASS_METHOD: " << static_cast<const int>( CLASS_METHOD ) << std::endl;
+//     }
+// 
+//     void run() override
+//     {
+//         executeHelper( m_params, std::index_sequence_for<Args...>() );
+//     }
+// 
+//     ReturnType execute( Args... args )
+//     {
+// //         if ( typeid(m_object) != typeid( void ) )
+// //             return (m_object->*m_method._method)( args... );
+// //         else
+// //             return m_method._function( args... );
+// //         //else
+// //             //return m_method( args... );
+//         return (m_object->*m_method)( args... );
+//     }
+//     
+// private:
+//     
+//     template <std::size_t... Is>
+//     ReturnType executeHelper( Params& params, std::index_sequence<Is...> )
+//     {
+//         return execute( std::get<Is>( params )... );
+//     }
+//     
+// private:
+//     
+//     Type* m_object;
+// //     union
+// //     {
+// //         Method _method;
+// //         Function _function;
+// //     } m_method;
+//     Method m_method;
+//     Params m_params;
+// };
+
+// template <class ReturnType, class... Args>
+// class Callback : public CallbackBase
+// {
+// 
+// public:
+//     
+//     //using Method = ReturnType (Type::*)( Args ... );
+//     using Function = ReturnType(*)(Args...);
+//     //using Method = std::function<ReturnType(const Type&, Args...)>;
+//     //using Function = std::function<ReturnType(Args...)>;
+//     using Params = std::tuple<Args...>;
+//     
+//     union Callable
+//     {
+//         //Method   _method;
+//         Function _function;
+//     };
+//     
+//     // TODO: Error checking
+//     
+//     Callback( Function function = nullptr, Args... args ) :
+//      m_params( args... )
+//     {
+//         //if ( typeid( Type ) == typeid( void ) )
+//             m_callable._function = function;
+//     }
+//     
+// //     Callback( Type* object = nullptr, Method method = nullptr, Args... args ) :
+// //      m_object( object ),
+// //      m_params( args... )
+// //     {
+// //         if ( typeid( Type ) != typeid( void ) )
+// //             m_callable._method = method;
+// //     }
+// 
+//     void run() override
+//     {
+//         executeHelper( m_params, std::index_sequence_for<Args...>() );
+//     }
+// 
+//     ReturnType execute( Args... args )
+//     {
+//         //return (m_object->*m_method)( args... );
+//         //if ( typeid( Type ) == typeid( void ) )
+//             return m_callable._function( args... );
+//         //return (m_object->*m_callable._method)( args... );
+//     }
+//     
+// private:
+//     
+//     template <std::size_t... Is>
+//     ReturnType executeHelper( Params& params, std::index_sequence<Is...> )
+//     {
+//         return execute( std::get<Is>( params )... );
+//     }
+//     
+// private:
+//     
+//     Callable m_callable;
+//     Params m_params;
+// };
 
 } // End of of namespace Event
 
