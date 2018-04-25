@@ -3,7 +3,7 @@
 
 #include "Memory/Pool.hpp"
 #include "Memory/Allocator.hpp"
-#include "Graphics/Window.hpp"
+#include "System/Window/Window.hpp"
 #include "Event/Handler.hpp"
 
 // Start of Irideiscent's namespace

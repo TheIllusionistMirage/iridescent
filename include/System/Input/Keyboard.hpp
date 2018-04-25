@@ -1,7 +1,8 @@
 #ifndef KEYBOARD_HPP
 #define KEYBOARD_HPP
 
-#include "System/Event/Imp/KeyboardImp.hpp"
+//#include "System/Event/Imp/KeyboardImp.hpp"
+#include "System/Input/Imp/KeyboardImp.hpp"
 
 namespace Iridescent
 {
@@ -12,6 +13,7 @@ namespace System
 namespace Keyboard
 {
 
+// Keyboard is a static class that encapsulates the keyboard in the system
 struct Keyboard
 {   
     // Returns true if the specified key is currently down

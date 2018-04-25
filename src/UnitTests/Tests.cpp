@@ -9,6 +9,8 @@
 
 // System module
 #include "System/Memory/Pool.hpp"
+#include "System/Event/Handler.hpp"
+#include "System/Window/Window.hpp"
 
 // Core module
 #include "Core/StringHelper.hpp"
@@ -141,11 +143,43 @@ bool testMemoryPool()
 
 
 ///////////////////////////////////////////////////////////////////////////////
+// Module: System
+// Submodule: Memory
+///////////////////////////////////////////////////////////////////////////////
+bool testWindow()
+{
+    Iridescent::System::Window::Window window;
+    
+    window.create( 800, 600, 32, "Test Graphical Window", Iridescent::System::Window::Style::Default );
+    
+    Iridescent::System::Event::Handler handler;
+    window.addEventHandler( &handler );
+    
+    handler.bindCallback<void>( Iridescent::System::Event::Event::EventType::Closed, [&window](){ window.destroy(); } );
+    handler.bindCallback<void>( Iridescent::System::Event::Event::EventType::KeyPressed, [](){ std::cout << "Key pressed" << std::endl; } );
+    
+    while ( window.isOpen() )
+    {
+        // Update events (input handling)
+        window.updateEvents();
+        
+        // update game logic...
+        
+        // render scene...
+        window.clear();
+        window.display();
+    }
+    
+    window.destroy();
+    
+    return true;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 // Module: Core
 // Submodule: StringHelper
 ///////////////////////////////////////////////////////////////////////////////
-
-
 bool testStringHelper()
 {
     std::string str1 = "Hello, World!";

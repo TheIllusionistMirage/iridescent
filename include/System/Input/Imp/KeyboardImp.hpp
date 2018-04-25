@@ -129,16 +129,18 @@ struct KeyboardImp
 {
     inline static sf::Keyboard::Key convertKeyCode( Key key )
     {
-        switch ( static_cast<int>( key ) )
-        {
-            case KEY_CAST( Key::Escape ): return sf::Keyboard::Key::Escape;
-            case KEY_CAST( Key::Enter ): return sf::Keyboard::Key::Return;
-            case KEY_CAST( Key::W ): return sf::Keyboard::Key::W;
-            case KEY_CAST( Key::A ): return sf::Keyboard::Key::A;
-            case KEY_CAST( Key::S ): return sf::Keyboard::Key::S;
-            case KEY_CAST( Key::D ): return sf::Keyboard::Key::D;
-            default: return sf::Keyboard::Key::Unknown;
-        }
+//         switch ( static_cast<int>( key ) )
+//         {
+//             case KEY_CAST( Key::Escape ): return sf::Keyboard::Key::Escape;
+//             case KEY_CAST( Key::Enter ): return sf::Keyboard::Key::Return;
+//             case KEY_CAST( Key::W ): return sf::Keyboard::Key::W;
+//             case KEY_CAST( Key::A ): return sf::Keyboard::Key::A;
+//             case KEY_CAST( Key::S ): return sf::Keyboard::Key::S;
+//             case KEY_CAST( Key::D ): return sf::Keyboard::Key::D;
+//             default: return sf::Keyboard::Key::Unknown;
+//         }
+        
+        return static_cast<sf::Keyboard::Key>( key );
     }
     
     static bool isKeyDown( const Keyboard::Key key )

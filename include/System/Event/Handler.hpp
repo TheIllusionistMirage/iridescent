@@ -8,8 +8,7 @@
 #include <memory>
 
 #include "System/Event/Event.hpp"
-
-
+//#include "System/Window/Window.hpp"
 
 namespace Iridescent
 {
@@ -26,6 +25,7 @@ class Handler
 public:
     
     Handler(){}
+    
     ~Handler(){}
     
 //     template <class Type, class ReturnType, class... Args>
@@ -39,13 +39,13 @@ public:
 //         m_callbacks.insert( std::pair<Event::EventType, std::shared_ptr<CallbackClassMethod<Type, ReturnType, Args...>>>( event, std::make_shared<CallbackClassMethod<Type, ReturnType, Args...>>( callback ) ) );
 //     }
     
-    template <class Type, class ReturnType, class... Args>
+    template <class Type, class ReturnType = void, class... Args>
     void bindCallback( Event::EventType event, Type* object, typename CallbackClassMethod<Type, ReturnType, Args...>::Method method, Args... args )
     {
         m_callbacks.insert( std::pair<Event::EventType, std::shared_ptr<CallbackClassMethod<Type, ReturnType, Args...>>>( event, std::make_shared<CallbackClassMethod<Type, ReturnType, Args...>>( object, method, args... ) ) );
     }
     
-    template <class ReturnType, class... Args>
+    template <class ReturnType = void, class... Args>
     void bindCallback( Event::EventType event, typename CallbackFunction<ReturnType, Args...>::Function function, Args... args )
     {
         m_callbacks.insert( std::pair<Event::EventType, std::shared_ptr<CallbackFunction<ReturnType, Args...>>>( event, std::make_shared<CallbackFunction<ReturnType, Args...>>( function, args... ) ) );
@@ -56,13 +56,25 @@ public:
 //     {
 //     }
     
-    void handle()
+    void handle( const Event::EventType eventType )
+    {
+        //std::cout << "Event type: " << static_cast<int>( eventType ) << std::endl;
+        
+        auto range = m_callbacks.equal_range( eventType );
+        std::for_each( range.first, range.second, []( const std::pair<const Event::Event::EventType,
+                                                      std::shared_ptr<CallbackBase>> p )
+                                                    { p.second->run(); } );
+    }
+    
+    void handleAll()
     {
         for ( auto&& cb : m_callbacks )
         {
             cb.second->run();
         }
     }
+    
+    //void bindToWindow( Window::Window* window );
 
 private:
     
@@ -71,6 +83,8 @@ private:
     
     std::multimap<Event::Event::EventType, std::shared_ptr<CallbackBase>> m_callbacks;
     //std::map<Event::Event::EventType, std::shared_ptr<CallbackBase>> m_callbacks;
+    
+    //Window::Window m_window;
 };
 
 } // End of namespace Event

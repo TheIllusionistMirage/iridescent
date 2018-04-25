@@ -23,8 +23,9 @@ include_directories("${PROJECT_SOURCE_DIR}/include/")
 # Specify the source directories
 file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/src/System/*.cpp"
                   "${PROJECT_SOURCE_DIR}/src/System/Memory/*.cpp"
+                  "${PROJECT_SOURCE_DIR}/src/System/Window/Imp/*.cpp"
+                  "${PROJECT_SOURCE_DIR}/src/System/Window/*.cpp"
                   "${PROJECT_SOURCE_DIR}/src/System/Event/*.cpp"
-                  "${PROJECT_SOURCE_DIR}/src/System/Graphics/*.cpp"
                   "${PROJECT_SOURCE_DIR}/src/Core/*.cpp"
                   "${PROJECT_SOURCE_DIR}/src/UnitTests/*.cpp"
                   "${PROJECT_SOURCE_DIR}/src/*.cpp")
@@ -54,7 +55,7 @@ add_executable(iridescent ${SOURCES})
 target_link_libraries(iridescent ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 # Require C++14 or above compliant compiler
-set_property(TARGET iridescent PROPERTY CXX_STANDARD 14)
+set_property(TARGET iridescent PROPERTY CXX_STANDARD 17)
 set_property(TARGET iridescent PROPERTY CXX_STANDARD_REQUIRED ON)
 
 install(TARGETS iridescent RUNTIME DESTINATION bin)
